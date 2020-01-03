@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:dist="http://schemas.android.com/apk/distribution"
+    package="com.plusone.pwms">
+
+    <dist:module dist:instant="true" />
+
+    <uses-permission android:name="com.symbol.emdk.permission.EMDK"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+
+    <application
+        android:name=".model.MyApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:usesCleartextTraffic="true"
+        android:theme="@style/AppTheme">
+        <uses-library android:name="com.symbol.emdk" android:required="false"/>
+        <activity android:name=".activity.LoginActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".activity.WarehouseActivity" />
+        <activity android:name=".activity.MenuActivity"
+            android:launchMode="singleTask"/>
+        <activity android:name=".activity.ReceiveGoodsListActivity" />
+        <activity android:name=".activity.ReceiveGoodsConfirmActivity" />
+        <activity android:name=".activity.UpperShelfListActivity" />
+        <activity android:name=".activity.UpperShelfDetailActivity" />
+        <activity android:name=".activity.BlankBinsActivity" />
+        <activity android:name=".activity.PickListActivity" />
+        <activity android:name=".activity.PickDetailActivity" />
+        <activity android:name=".activity.CountListActivity" />
+        <activity android:name=".activity.CurrentLocationActivity" />
+        <activity android:name=".activity.CountDetailActivity" />
+        <activity android:name=".activity.CountDetailRegisterActivity" />
+        <activity android:name=".activity.SkuSelectActivity" />
+        <activity android:name=".activity.LotSelectActivity" />
+        <activity android:name=".activity.MoveTaskListActivity" />
+        <activity android:name=".activity.MoveTaskDetailActivity" />
+        <activity android:name=".activity.SplitListActivity" />
+        <activity android:name=".activity.SplitDetailActivity" />
+        <activity android:name=".activity.BolConfirmListActivity" />
+        <activity android:name=".activity.BolConfirmDetailActivity" />
+        <activity android:name=".activity.OthersActivity" />
+        <activity android:name=".activity.InventorySearchActivity" />
+        <activity android:name=".activity.MoveTaskConfirmActivity" />
+        <activity android:name=".activity.SysSettingActivity" />
+    </application>
+
+</manifest>

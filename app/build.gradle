@@ -1,0 +1,186 @@
+apply plugin: 'com.android.application'
+
+configurations.all {
+    resolutionStrategy.force 'com.android.support:support-annotations:27.1.1'
+}
+
+ext { // 定义当前gradle文件的全局变量
+    flag = true
+}
+
+/**
+ * @param filename 要打开的文件名字
+ * @param propName 文件里面的键名字
+ * @param isRootProject 是否用rootProject 文件打开，true 的话，在编译时候可以得到值，打包时候无法得到值。false的话在打包时候可以得到值,编译时候 无法得到值
+ * @return 所选择的文件里面的propName对应的值
+ */
+def getProperty(String filename, String propName, boolean isRootProject) {
+    //在这里 必须是在rootProject.file  如果 file的话 ，编译时候会出错
+    def propsFile
+    if (isRootProject) {
+        propsFile = rootProject.file(rootProject.getRootDir().getAbsolutePath() + "/app/" + filename)
+    } else {
+        propsFile = file(rootProject.getRootDir().getAbsolutePath() + "/app/" + filename)
+    }
+    if (propsFile.exists()) {
+        def props = new Properties()
+        props.load(new FileInputStream(propsFile))
+        if (props[propName] != null) {
+            //下面这个输出在android studio3.1里面 在Build窗口 右边一个锤子下面 toggle哪里，就是原来的message哪里
+            print("getProperty:"+ "versionCode " + props[propName])
+            return props[propName]
+        } else {
+            print("getProperty:"+"No such property " + propName + " in file " + filename);
+        }
+    } else {
+        print("getProperty:"+filename + " does not exist!")
+    }
+}
+
+//version.properties  里面的vesioncode自增
+def PropertyAdd(String filename, String propName) {
+    if(flag){
+        //这里必须用file  如果用rootProject的话 则找不到file为null
+        def propsFile = file(rootProject.getRootDir().getAbsolutePath() + "/app/" + filename)
+        //只有在打正式版的情况下才继续运行，否则退出方法，这样是为了防止 编译时候versionCode 也自增 if里面的参数可以在Build窗口里面 message 最上边[]里面就是
+        def runTasks = gradle.startParameter.taskNames
+        if ((':app:assembleScpwmsRelease' in runTasks)) {
+            if (propsFile.exists()) {
+                def props = new Properties()
+                props.load(new FileInputStream(propsFile))
+                //这里要注意 props[propName] 是String 类型
+                if (props[propName] != null) {
+                    def code = (props[propName]).toInteger() //转成Integer
+                    code = code + 1
+                    props[propName] = code.toString()  //自增 且转成String
+                } else {
+                    print("PropertyAdd:No such property " + propName + " in file " + filename);
+                }
+
+                if (props['versionNum'] != null) {
+                    def code2 = (props['versionNum']).toInteger() //转成Integer
+                    if(code2 == 9){
+                        code2 = 0
+                        def versionMiddle = (props['versionMiddle']).toInteger() //转成Integer
+                        versionMiddle = versionMiddle + 1
+                        props['versionMiddle'] = versionMiddle.toString()  //自增 且转成String
+                    }else{
+                        code2 = code2 + 1
+                    }
+                    props['versionNum'] = code2.toString()  //自增 且转成String
+                }
+
+
+                //在这里提交 对version.properties的更改
+                props.store(propsFile.newWriter(), null)
+                flag = false;
+            } else {
+                print("PropertyAdd:" + filename + " does not exist!")
+            }
+        }
+    }
+
+}
+
+//用于生成时间
+def buildTime() {
+    def date = new Date()
+    //yy年 MM月 dd日 HH小时 mm分钟 ss秒
+    def formattedDate = date.format('yyMMdd_HHmm')
+    return formattedDate
+}
+
+android {
+    compileSdkVersion 29
+//    compileSdkVersion 'Zebra Technologies Corp:EMDK APIs:26'
+//    buildToolsVersion "29.0.2"
+    //定义版本号及版本名
+    def verCode = Integer.valueOf(getProperty("version.properties", "versionCode", true))
+    def verName = "1." + Integer.valueOf(getProperty("version.properties", "versionMiddle", true)) + "." + Integer.valueOf(getProperty("version.properties", "versionNum", true))
+    defaultConfig {
+        applicationId "com.plusone.pwms"
+        minSdkVersion 22
+        targetSdkVersion 29
+        versionCode verCode
+        versionName verName
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        //必须要保证所有的flavor 都属于同一个维度
+        flavorDimensions "default"
+        javaCompileOptions { annotationProcessorOptions { includeCompileClasspath = true } }
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    applicationVariants.all { variant ->
+        variant.outputs.all {
+            def fileName
+            //这里也可以调用上面的 (':app:assembleRelease' in runTasks) 进行判断
+            if (variant.buildType.name.contains("release")) {
+                //在字符串里面调用方法的话，得要${ }里面调用 切记
+                fileName = "${variant.productFlavors[0].name}-DATE_${buildTime()}.apk"
+                //调用方法 增加versionCode 值
+                PropertyAdd("version.properties", "versionCode")
+            } else {
+                fileName = "${variant.productFlavors[0].name}_debug-DATE_${buildTime()}.apk"
+            }
+            outputFileName = fileName
+        }
+    }
+    productFlavors {
+        //测试环境
+//        pwms_test{
+//            //对应服务器地址
+//            buildConfigField "String", "SERVER_URL",'"http://172.16.90.44:8080/pwms-stand/services/"'
+//            applicationId 'com.plusone.pwms.test'
+//            manifestPlaceholders = [
+//                    "app_name":"pwms_test",
+//                    "app_icon":"@mipmap/logo"
+//            ]
+//        }
+        pwms_local{
+            //对应服务器地址
+            buildConfigField "String", "SERVER_URL",'"http://192.168.10.169:9099/services/"'
+            applicationId 'com.plusone.pwms.local'
+            manifestPlaceholders = [
+                    "app_name":"pwms_local",
+                    "app_icon":"@mipmap/logo"
+            ]
+        }
+        //  生产环境
+//        pwms {
+//            //对应服务器地址
+//            buildConfigField "String", "SERVER_URL", '"http://172.16.65.83:8088/scpwms-2.0/services/"'
+//            applicationId 'com.plusone.pwms.product'
+//            manifestPlaceholders = [
+//                    "app_name": "pwms",
+//                    "app_icon":"@mipmap/logo_formal"
+//            ]
+//        }
+    }
+    compileOptions {
+        sourceCompatibility = '1.8'
+        targetCompatibility = '1.8'
+    }
+    buildToolsVersion = '29.0.2'
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'], exclude: ['com.symbol.emdk.jar'])
+    compileOnly fileTree(include: ['com.symbol.emdk.jar'], dir: 'libs')
+    implementation 'androidx.appcompat:appcompat:1.2.0-alpha01'
+//    implementation 'com.android.support:appcompat-v7:27.0.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta3'
+    testImplementation 'junit:junit:4.13-rc-2'
+    androidTestImplementation 'androidx.test:runner:1.3.0-alpha03'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0-alpha03'
+    implementation 'com.github.gittjy:LoadingDialog:1.0.2'
+    implementation 'com.google.code.gson:gson:2.8.6'
+    implementation 'androidx.recyclerview:recyclerview:1.1.0'
+    implementation 'com.yanzhenjie.recyclerview:x:1.3.2'
+    implementation 'com.balysv:material-ripple:1.0.2' //按钮点击水波纹效果
+    implementation 'com.github.huangyanbin:SmartTable:2.2.0'
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.0.0'
+}

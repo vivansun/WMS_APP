@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.plusone.pwms.activity.MenuActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/activity_main_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorBlue"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="@style/toolbar_theme">
+
+        <ImageButton
+            android:id="@+id/refresh_icon"
+            android:src="@drawable/refresh_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:layout_marginLeft="10dp"
+            android:background="@color/transparent"
+            />
+
+
+        <TextView
+            android:id="@+id/toolbar_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textColor="@color/colorWhite"
+            android:text="@string/function_menu"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+
+        <Button
+            android:id="@+id/toolbar_warehouse"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_marginRight="10dp"
+            android:background="@color/colorWhite"
+            android:textColor="@color/colorBlack"
+            android:textSize="12sp" />
+    </androidx.appcompat.widget.Toolbar>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="30dp"
+            android:orientation="vertical">
+
+            
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="10dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/receive_goods"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="10dp"
+                    android:paddingVertical="25dp"
+                    android:text="1.收货"
+                    android:textSize="15sp"/>
+                <Button
+                    android:id="@+id/upper_shelf"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:paddingVertical="25dp"
+                    android:text="2.上架"
+                    android:textSize="15sp"/>
+                <Button
+                    android:id="@+id/picking"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="15dp"
+                    android:paddingVertical="25dp"
+                    android:text="3.拣选"
+                    android:textSize="15sp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="10dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/inventory"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="10dp"
+                    android:paddingVertical="25dp"
+                    android:text="4.盘点"
+                    android:textSize="15sp"/>
+                <Button
+                    android:id="@+id/move_task"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:paddingVertical="25dp"
+                    android:text="5.移位"
+                    android:textSize="15sp"/>
+                <Button
+                    android:id="@+id/split"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="15dp"
+                    android:paddingVertical="25dp"
+                    android:text="6.分拣"
+                    android:textSize="15sp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="10dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/review"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="10dp"
+                    android:paddingVertical="25dp"
+                    android:text="7.复核"
+                    android:textSize="15sp"/>
+                <Button
+                    android:id="@+id/others"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:paddingVertical="25dp"
+                    android:text="8.其他"
+                    android:textSize="15sp"/>
+            </LinearLayout>
+
+
+
+
+        </LinearLayout>
+
+
+    </ScrollView>
+</LinearLayout>
