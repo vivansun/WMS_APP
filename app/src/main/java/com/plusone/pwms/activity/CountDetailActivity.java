@@ -110,6 +110,46 @@ public class CountDetailActivity extends Activity {
     Column<Object> invBaseQtys;
     Column<Double> countNums;
 
+
+    //使editText点击外部时候失去焦点
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (ev.getAction() == MotionEvent.ACTION_DOWN) {
+            View v = getCurrentFocus();
+            if (isShouldHideInput(v, ev)) {//点击editText控件外部
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                if (imm != null) {
+                    assert v != null;
+                    if (editText != null) {
+                        imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
+                        editText.clearFocus();
+                    }
+                }
+            }
+            return super.dispatchTouchEvent(ev);
+        }
+        // 必不可少，否则所有的组件都不会有TouchEvent了
+        return getWindow().superDispatchTouchEvent(ev) || onTouchEvent(ev);
+    }
+
+    EditText editText = null;
+
+    public boolean isShouldHideInput(View v, MotionEvent event) {
+        if (v != null && (v instanceof EditText)) {
+            editText = (EditText) v;
+            int[] leftTop = {0, 0};
+            //获取输入框当前的location位置
+            v.getLocationInWindow(leftTop);
+            int left = leftTop[0];
+            int top = leftTop[1];
+            int bottom = top + v.getHeight();
+            int right = left + v.getWidth();
+            return !(event.getX() > left && event.getX() < right
+                    && event.getY() > top && event.getY() < bottom);
+        }
+        return false;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -133,7 +173,9 @@ public class CountDetailActivity extends Activity {
 //        planPkgET = findViewById(R.id.plan_package);
         countNumET = findViewById(R.id.count_num);
         binCodeET.setEnabled(false);
+        binCodeET.setBackgroundColor(getResources().getColor(R.color.colorGrey));
         countDetailET.setEnabled(false);
+        countDetailET.setBackgroundColor(getResources().getColor(R.color.colorGrey));
 //        planPkgET.setEnabled(false);
 
         //接收传递的数据
@@ -180,15 +222,22 @@ public class CountDetailActivity extends Activity {
             public void onClick(View v) {
 //                ToastUtil.show(CountDetailActivity.this, "asdasd");
                 if (currentPosition != null){
-                    countNums.getDatas().set(currentPosition,Double.parseDouble(countNumET.getText().toString()));
-                    currentPosition += 1;
-                    if (currentPosition<countDetailInfos.size()){
-                        checkInit();
+                    if (TextUtils.isEmpty(countNumET.getText())){
+                        ToastUtil.show(CountDetailActivity.this, "实盘数量不能为空");
                     }else {
-                        currentPosition -= 1;
-                        ToastUtil.show(CountDetailActivity.this, "已经录入完毕，是否提交库位。");
+                        countNums.getDatas().set(currentPosition,Double.parseDouble(countNumET.getText().toString()));
+                        countDetailInfos.get(currentPosition).setCountNum(Double.parseDouble(countNumET.getText().toString()));
+                        countNumET.setText("");
+                        currentPosition += 1;
+                        if (currentPosition<countDetailInfos.size()){
+                            checkInit();
+                        }else {
+                            currentPosition -= 1;
+                            countSmartTable.refreshDrawableState();           //不要忘记刷新表格，否则选中效果会延时一步
+                            countSmartTable.invalidate();
+                            ToastUtil.show(CountDetailActivity.this, "已经录入完毕，是否提交库位。");
+                        }
                     }
-
                 }else {
                     ToastUtil.show(CountDetailActivity.this, "请先选择一条记录");
                 }
@@ -230,10 +279,13 @@ public class CountDetailActivity extends Activity {
                         }
                     }else {
                         ToastUtil.show(CountDetailActivity.this, "有记录还未填写实盘数量。");
+                        countResults.clear();
                         break;
                     }
                 }
-                new CountConfirmAsync().execute();
+                if (countResults != null && countResults.size() != 0){
+                    new CountConfirmAsync().execute();
+                }
             }
         });
 
@@ -267,7 +319,6 @@ public class CountDetailActivity extends Activity {
             switch (requestCode) {
                 //第一个case是1，即对应之前startActivityForResult()方法当中的请求码
                 case 14:
-                    //不知道行不行
                     ClientCountRecord clientCountRecord = (ClientCountRecord) data.getSerializableExtra("clientCountRecord");
                     if (blindCount){
                         clientCountRecord.setInvBaseQty("**");
@@ -275,9 +326,10 @@ public class CountDetailActivity extends Activity {
                     }
                     List<ClientCountRecord> ClientCountRecordList = new ArrayList<>();
                     ClientCountRecordList.add(clientCountRecord);
-                    countDetailInfos.add(clientCountRecord);
+//                    countDetailInfos.add(clientCountRecord);
                     countSmartTable.addData(ClientCountRecordList,true);
-
+                    countSmartTable.refreshDrawableState();           //不要忘记刷新表格，否则选中效果会延时一步
+                    countSmartTable.invalidate();
                     break;
             }
         }
@@ -300,7 +352,7 @@ public class CountDetailActivity extends Activity {
                 return R.mipmap.uncheck;
             }
         });
-
+        operations.setFixed(true);
         operations.setOnColumnItemClickListener(new OnColumnItemClickListener<Boolean>() {
             @Override
             public void onClick(Column<Boolean> column, String value, Boolean s, int position) {
@@ -686,7 +738,9 @@ public class CountDetailActivity extends Activity {
                     binCode = binCodeET.getText().toString();
                     countNumET.setText("");
                     InitTable();
+                    countResults.clear();
                 } else {
+                    countResults.clear();
                     ToastUtil.show(CountDetailActivity.this, result.getSeverityMsg());
                 }
             }

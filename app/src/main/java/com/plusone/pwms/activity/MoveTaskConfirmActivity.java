@@ -205,15 +205,25 @@ public class MoveTaskConfirmActivity extends Activity {
         destPalletSeqET = findViewById(R.id.palletSeq_scan_confirm);
 
         binCodeET.setEnabled(false);
+        binCodeET.setBackgroundColor(getResources().getColor(R.color.colorGrey));
         palletSeqET.setEnabled(false);
+        palletSeqET.setBackgroundColor(getResources().getColor(R.color.colorGrey));
         skuCodeET.setEnabled(false);
+        skuCodeET.setBackgroundColor(getResources().getColor(R.color.colorGrey));
         skuNameET.setEnabled(false);
+        skuNameET.setBackgroundColor(getResources().getColor(R.color.colorGrey));
         lotSequenceET.setEnabled(false);
+        lotSequenceET.setBackgroundColor(getResources().getColor(R.color.colorGrey));
         dispLotET.setEnabled(false);
+        dispLotET.setBackgroundColor(getResources().getColor(R.color.colorGrey));
         planPkgET.setEnabled(false);
+        planPkgET.setBackgroundColor(getResources().getColor(R.color.colorGrey));
         packQtyAndEAET.setEnabled(false);
+        packQtyAndEAET.setBackgroundColor(getResources().getColor(R.color.colorGrey));
         inboundDateET.setEnabled(false);
+        inboundDateET.setBackgroundColor(getResources().getColor(R.color.colorGrey));
         trackSeqET.setEnabled(false);
+        trackSeqET.setBackgroundColor(getResources().getColor(R.color.colorGrey));
 
         binCodeET.setText(clientInvInfo.getBinCode());
         palletSeqET.setText(clientInvInfo.getPalletSeq());

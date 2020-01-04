@@ -195,15 +195,25 @@ public class UpperShelfDetailActivity extends Activity {
         unExecutePackQtyET = findViewById(R.id.unExecutePackQty);
         newBinET = findViewById(R.id.newBin);
         skuCodeET.setEnabled(false);
+        skuCodeET.setBackgroundColor(getResources().getColor(R.color.colorGrey));
         skuNameET.setEnabled(false);
+        skuNameET.setBackgroundColor(getResources().getColor(R.color.colorGrey));
         planPkgET.setEnabled(false);
+        planPkgET.setBackgroundColor(getResources().getColor(R.color.colorGrey));
         unUpperET.setEnabled(false);
+        unUpperET.setBackgroundColor(getResources().getColor(R.color.colorGrey));
         lotSequenceET.setEnabled(false);
+        lotSequenceET.setBackgroundColor(getResources().getColor(R.color.colorGrey));
         dispLotET.setEnabled(false);
+        dispLotET.setBackgroundColor(getResources().getColor(R.color.colorGrey));
         srcBinET.setEnabled(false);
+        srcBinET.setBackgroundColor(getResources().getColor(R.color.colorGrey));
         destBinET.setEnabled(false);
+        destBinET.setBackgroundColor(getResources().getColor(R.color.colorGrey));
         palletSeqET.setEnabled(false);
+        palletSeqET.setBackgroundColor(getResources().getColor(R.color.colorGrey));
         coefficientET.setEnabled(false);
+        coefficientET.setBackgroundColor(getResources().getColor(R.color.colorGrey));
 
 
         //加载数据
@@ -255,6 +265,7 @@ public class UpperShelfDetailActivity extends Activity {
                 if(TextUtils.isEmpty(((ClientPackageInfo)packageSpinner.getSelectedItem()).getPackageName()) || TextUtils.isEmpty(unExecutePackQtyET.getText()) || TextUtils.isEmpty(newBinET.getText())){
                     ToastUtil.show(UpperShelfDetailActivity.this, "包装/数量/库位 必输");
                 }else {
+                    binCode = newBinET.getText().toString();
                     unExecutePackQty = Double.parseDouble(unExecutePackQtyET.getText().toString());
                     if (!newBinET.getText().toString().equals(destBinET.getText().toString())){
                         DialogUtil.showNormalDialog(UpperShelfDetailActivity.this, "库位改变", "新库位与原目标库位不一致，是否确认",
@@ -352,8 +363,7 @@ public class UpperShelfDetailActivity extends Activity {
             //第一个case是1，即对应之前startActivityForResult()方法当中的请求码
             case 14:
                 if (resultCode == RESULT_OK){
-                    binCode = data.getStringExtra("binCode");
-                    newBinET.setText(binCode);
+                    newBinET.setText(data.getStringExtra("binCode"));
                 }
                 break;
         }
@@ -414,7 +424,13 @@ public class UpperShelfDetailActivity extends Activity {
                     bindSpinnerItems();
                 } else {
                     if (CustomMsgEnum.NORESULT.getName().equals(result.getSeverityMsg())){
-                        ToastUtil.show(UpperShelfDetailActivity.this, "全部执行完成，点确认后返回");
+                        DialogUtil.showNormalDialogNoCancle(UpperShelfDetailActivity.this, "操作完成", "全部执行完成，点确认后返回",
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        finish();
+                                    }
+                                });
                     }else {
                         ToastUtil.show(UpperShelfDetailActivity.this, result.getSeverityMsg());
                     }
@@ -463,8 +479,13 @@ public class UpperShelfDetailActivity extends Activity {
             if(result != null){
                 if ("M".equals(result.getSeverityMsgType())) {
                     if (CustomMsgEnum.NORESULT.getName().equals(result.getSeverityMsg())){
-                        ToastUtil.show(UpperShelfDetailActivity.this, result.getSeverityMsg());
-                        finish();
+                        DialogUtil.showNormalDialogNoCancle(UpperShelfDetailActivity.this, "操作完成", result.getSeverityMsg(),
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        finish();
+                                    }
+                                });
                     }else {
                         PutAwayDetail putAwayDetail= result.getResults();
                         if (!TextUtils.isEmpty(putAwayDetail.getSkuCode())){
@@ -509,7 +530,13 @@ public class UpperShelfDetailActivity extends Activity {
                     }
                 } else {
                     if (CustomMsgEnum.NORESULT.getName().equals(result.getSeverityMsg())){
-                        ToastUtil.show(UpperShelfDetailActivity.this, "全部执行完成，点确认后返回");
+                        DialogUtil.showNormalDialogNoCancle(UpperShelfDetailActivity.this, "操作完成", "全部执行完成，点确认后返回",
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        finish();
+                                    }
+                                });
                     }else {
                         ToastUtil.show(UpperShelfDetailActivity.this, result.getSeverityMsg());
                     }

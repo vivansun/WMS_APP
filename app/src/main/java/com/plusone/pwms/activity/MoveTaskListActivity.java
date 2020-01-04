@@ -86,7 +86,7 @@ public class MoveTaskListActivity extends Activity {
 //        mRefreshLayout.setOnRefreshListener(mRefreshListener); // 刷新监听。
 
         //加载数据
-        loadData();
+//        loadData();
 
         // 创建菜单：
         SwipeMenuCreator mSwipeMenuCreator = new SwipeMenuCreator() {
@@ -280,4 +280,9 @@ public class MoveTaskListActivity extends Activity {
         }
     }
 
+    @Override
+    protected void onResume(){
+        super.onResume();
+        loadData();
+    }
 }

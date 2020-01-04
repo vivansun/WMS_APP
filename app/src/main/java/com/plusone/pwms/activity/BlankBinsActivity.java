@@ -159,7 +159,7 @@ public class BlankBinsActivity extends Activity {
                 return R.mipmap.uncheck;
             }
         });
-
+        operations.setFixed(true);
         operations.setOnColumnItemClickListener(new OnColumnItemClickListener<Boolean>() {
             @Override
             public void onClick(Column<Boolean> column, String value, Boolean s, int position) {

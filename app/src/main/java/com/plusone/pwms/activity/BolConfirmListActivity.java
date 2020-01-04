@@ -83,7 +83,7 @@ public class BolConfirmListActivity extends Activity {
 
 
         //加载数据
-        loadData();
+//        loadData();
 
         //返回按钮
         toolbar.setNavigationIcon(R.drawable.icon_back_white);
@@ -153,7 +153,7 @@ public class BolConfirmListActivity extends Activity {
                 return R.mipmap.uncheck;
             }
         });
-
+        operations.setFixed(true);
         operations.setOnColumnItemClickListener(new OnColumnItemClickListener<Boolean>() {
             @Override
             public void onClick(Column<Boolean> column, String value, Boolean s, int position) {
@@ -366,5 +366,11 @@ public class BolConfirmListActivity extends Activity {
             return GsonUtil.toBeanByTypeToken(result, new TypeToken<Response<ClientBolInfos>>() {
             }.getType());
         }
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        loadData();
     }
 }

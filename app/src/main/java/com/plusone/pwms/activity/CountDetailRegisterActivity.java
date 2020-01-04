@@ -199,10 +199,15 @@ public class CountDetailRegisterActivity extends Activity {
         palletSeqET = findViewById(R.id.palletSeq);
 
         binCodeET.setEnabled(false);
+        binCodeET.setBackgroundColor(getResources().getColor(R.color.colorGrey));
         coefficientET.setEnabled(false);
+        coefficientET.setBackgroundColor(getResources().getColor(R.color.colorGrey));
         EANumET.setEnabled(false);
+        EANumET.setBackgroundColor(getResources().getColor(R.color.colorGrey));
         dispLotET.setEnabled(false);
+        dispLotET.setBackgroundColor(getResources().getColor(R.color.colorGrey));
         palletSeqET.setEnabled(false);
+        palletSeqET.setBackgroundColor(getResources().getColor(R.color.colorGrey));
 
         binCodeET.setText(binCode);
 
@@ -418,6 +423,7 @@ public class CountDetailRegisterActivity extends Activity {
         }
         if (!TextUtils.isEmpty(packQtyET.getText())){
             clientCountRecord.setInvPackQty(Double.parseDouble(packQtyET.getText().toString()));
+            clientCountRecord.setCountNum(Double.parseDouble(packQtyET.getText().toString()));
         }
         if (!TextUtils.isEmpty(EANumET.getText())){
             clientCountRecord.setInvBaseQty(Double.parseDouble(EANumET.getText().toString()));

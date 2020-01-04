@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.reflect.TypeToken;
 import com.plusone.pwms.R;
+import com.plusone.pwms.enums.EnuInvStatus;
 import com.plusone.pwms.model.ClientInvInfo;
 import com.plusone.pwms.model.ClientInvInfos;
 import com.plusone.pwms.model.ClientWarehouse;
@@ -265,7 +266,15 @@ public class InventorySearchActivity extends Activity {
                     s+="/";
                 }
                 if (!TextUtils.isEmpty(clientInvInfo.getInvStatus())){
-                    s+=clientInvInfo.getInvStatus();
+                    if (EnuInvStatus.AVAILABLE.getCode().equals(clientInvInfo.getInvStatus())){
+                        s+=EnuInvStatus.AVAILABLE.getName();
+                    }else if (EnuInvStatus.UNAVAILABLE.getCode().equals(clientInvInfo.getInvStatus())){
+                        s+=EnuInvStatus.UNAVAILABLE.getName();
+                    }else if (EnuInvStatus.QC.getCode().equals(clientInvInfo.getInvStatus())){
+                        s+=EnuInvStatus.QC.getName();
+                    }else if (EnuInvStatus.FREEZE.getCode().equals(clientInvInfo.getInvStatus())){
+                        s+=EnuInvStatus.FREEZE.getName();
+                    }
                     s+="/";
                 }
                 if (!TextUtils.isEmpty(clientInvInfo.getLotSequence())){

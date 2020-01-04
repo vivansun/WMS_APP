@@ -187,16 +187,27 @@ public class PickDetailActivity extends Activity {
         dispLotET = findViewById(R.id.dispLot);
         packageSpinner = (Spinner) findViewById(R.id.packageSpinner);
         unExecutePackQtyET = findViewById(R.id.unExecutePackQty);
+
         taskIdET.setEnabled(false);
+        taskIdET.setBackgroundColor(getResources().getColor(R.color.colorGrey));
         palletSeqET.setEnabled(false);
+        palletSeqET.setBackgroundColor(getResources().getColor(R.color.colorGrey));
         srcBinET.setEnabled(false);
+        srcBinET.setBackgroundColor(getResources().getColor(R.color.colorGrey));
         destBinET.setEnabled(false);
+        destBinET.setBackgroundColor(getResources().getColor(R.color.colorGrey));
         skuCodeET.setEnabled(false);
+        skuCodeET.setBackgroundColor(getResources().getColor(R.color.colorGrey));
         skuNameET.setEnabled(false);
+        skuNameET.setBackgroundColor(getResources().getColor(R.color.colorGrey));
         planPkgAndCoefficientET.setEnabled(false);
+        planPkgAndCoefficientET.setBackgroundColor(getResources().getColor(R.color.colorGrey));
         unExecutePackQtyAndEAET.setEnabled(false);
+        unExecutePackQtyAndEAET.setBackgroundColor(getResources().getColor(R.color.colorGrey));
         lotSequenceET.setEnabled(false);
+        lotSequenceET.setBackgroundColor(getResources().getColor(R.color.colorGrey));
         dispLotET.setEnabled(false);
+        dispLotET.setBackgroundColor(getResources().getColor(R.color.colorGrey));
 
         //加载数据
         loadData();
@@ -388,28 +399,29 @@ public class PickDetailActivity extends Activity {
                     if (CustomMsgEnum.COMPLETENORESULT.getName().equals(result.getSeverityMsg())){
                         ToastUtil.show(PickDetailActivity.this, result.getSeverityMsg());
                         finish();
+                    }else {
+                        PickDetail pickDetail= result.getResults();
+                        skuCodeET.setText(pickDetail.getSkuCode());
+                        skuNameET.setText(pickDetail.getSkuName());
+                        lotSequenceET.setText(pickDetail.getLotSequence());
+                        dispLotET.setText(pickDetail.getDispLot());
+                        srcBinET.setText(pickDetail.getSrcBin());
+                        destBinET.setText(pickDetail.getDestBin());
+                        palletSeqET.setText(pickDetail.getPalletSeq());
+                        if (pickDetail.getUnExecutePackQty() != null){
+                            unExecutePackQtyET.setText(pickDetail.getUnExecutePackQty().toString());
+                        }
+                        unExecuteEaQty = pickDetail.getUnExecuteEaQty();
+                        planPkg = pickDetail.getPlanPkg();
+                        if (pickDetail.getPkgInfos() != null){
+                            clientPackageInfos = pickDetail.getPkgInfos();
+                        }
+                        taskId = pickDetail.getTaskId();
+                        if (pickDetail.getTaskId() != null){
+                            taskIdET.setText(pickDetail.getTaskId().toString());
+                        }
+                        bindSpinnerItems();
                     }
-                    PickDetail pickDetail= result.getResults();
-                    skuCodeET.setText(pickDetail.getSkuCode());
-                    skuNameET.setText(pickDetail.getSkuName());
-                    lotSequenceET.setText(pickDetail.getLotSequence());
-                    dispLotET.setText(pickDetail.getDispLot());
-                    srcBinET.setText(pickDetail.getSrcBin());
-                    destBinET.setText(pickDetail.getDestBin());
-                    palletSeqET.setText(pickDetail.getPalletSeq());
-                    if (pickDetail.getUnExecutePackQty() != null){
-                        unExecutePackQtyET.setText(pickDetail.getUnExecutePackQty().toString());
-                    }
-                    unExecuteEaQty = pickDetail.getUnExecuteEaQty();
-                    planPkg = pickDetail.getPlanPkg();
-                    if (pickDetail.getPkgInfos() != null){
-                        clientPackageInfos = pickDetail.getPkgInfos();
-                    }
-                    taskId = pickDetail.getTaskId();
-                    if (pickDetail.getTaskId() != null){
-                        taskIdET.setText(pickDetail.getTaskId().toString());
-                    }
-                    bindSpinnerItems();
                 } else {
                     if (CustomMsgEnum.NORESULT.getName().equals(result.getSeverityMsg())){
                         ToastUtil.show(PickDetailActivity.this, "全部执行完成，点确认后返回");

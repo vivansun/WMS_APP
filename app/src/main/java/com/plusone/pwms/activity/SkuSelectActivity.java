@@ -7,8 +7,10 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -95,6 +97,45 @@ public class SkuSelectActivity extends Activity {
     Column<String> skuCodes;
     Column<String> skuNames;
     Column<String> skuSpecs;
+
+    //使editText点击外部时候失去焦点
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (ev.getAction() == MotionEvent.ACTION_DOWN) {
+            View v = getCurrentFocus();
+            if (isShouldHideInput(v, ev)) {//点击editText控件外部
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                if (imm != null) {
+                    assert v != null;
+                    if (editText != null) {
+                        imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
+                        editText.clearFocus();
+                    }
+                }
+            }
+            return super.dispatchTouchEvent(ev);
+        }
+        // 必不可少，否则所有的组件都不会有TouchEvent了
+        return getWindow().superDispatchTouchEvent(ev) || onTouchEvent(ev);
+    }
+
+    EditText editText = null;
+
+    public boolean isShouldHideInput(View v, MotionEvent event) {
+        if (v != null && (v instanceof EditText)) {
+            editText = (EditText) v;
+            int[] leftTop = {0, 0};
+            //获取输入框当前的location位置
+            v.getLocationInWindow(leftTop);
+            int left = leftTop[0];
+            int top = leftTop[1];
+            int bottom = top + v.getHeight();
+            int right = left + v.getWidth();
+            return !(event.getX() > left && event.getX() < right
+                    && event.getY() > top && event.getY() < bottom);
+        }
+        return false;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -214,7 +255,7 @@ public class SkuSelectActivity extends Activity {
                 return R.mipmap.uncheck;
             }
         });
-
+        operations.setFixed(true);
         operations.setOnColumnItemClickListener(new OnColumnItemClickListener<Boolean>() {
             @Override
             public void onClick(Column<Boolean> column, String value, Boolean s, int position) {

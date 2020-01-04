@@ -164,7 +164,6 @@ public class PickListActivity extends Activity {
         // 绑定类
         public class MyHolder extends RecyclerView.ViewHolder {
 
-            TextView biztypeTv;
             TextView stockDateTv;
             TextView planQtyTv;
             TextView executedQtyTv;
@@ -179,7 +178,6 @@ public class PickListActivity extends Activity {
 
             public MyHolder(@NonNull View itemView) {
                 super(itemView);
-                biztypeTv = (TextView) itemView.findViewById(R.id.biztype);
                 stockDateTv = (TextView) itemView.findViewById(R.id.stockDate);
                 planQtyTv = (TextView) itemView.findViewById(R.id.planQty);
                 executedQtyTv = (TextView) itemView.findViewById(R.id.executedQty);
@@ -207,7 +205,6 @@ public class PickListActivity extends Activity {
                     myHolder.skuCountTv.setText(clientPickInfo.getSkuCount().toString());
                     myHolder.workModeTv.setText(clientPickInfo.getWorkMode());
                 }
-                myHolder.biztypeTv.setText(clientPickInfo.getBusinessType());
                 myHolder.stockDateTv.setText(clientPickInfo.getStockDate());
                 myHolder.planQtyTv.setText(clientPickInfo.getPlanQty().toString());
                 myHolder.executedQtyTv.setText(clientPickInfo.getExecutedQty());

@@ -29,6 +29,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.reflect.TypeToken;
 import com.plusone.pwms.R;
+import com.plusone.pwms.enums.CustomMsgEnum;
 import com.plusone.pwms.enums.EnuLotFieldType;
 import com.plusone.pwms.enums.EnuLotFormat;
 import com.plusone.pwms.model.ClientAsnDetailInfo;
@@ -273,20 +274,27 @@ public class ReceiveGoodsConfirmActivity extends Activity {
         clearButton = findViewById(R.id.clear);
         skuCodeET = findViewById(R.id.sku_code);
         skuCodeET.setEnabled(false);
+        skuCodeET.setBackgroundColor(getResources().getColor(R.color.colorGrey));
         skuNameET = findViewById(R.id.sku_name);
         skuNameET.setEnabled(false);
+        skuNameET.setBackgroundColor(getResources().getColor(R.color.colorGrey));
         unReceiveQtyET = findViewById(R.id.unreceive_qty);
         unReceiveQtyET.setEnabled(false);
+        unReceiveQtyET.setBackgroundColor(getResources().getColor(R.color.colorGrey));
         dockET = findViewById(R.id.dock);
         dockET.setEnabled(false);
+        dockET.setBackgroundColor(getResources().getColor(R.color.colorGrey));
         packageSpinner = (Spinner) findViewById(R.id.packageSpinner);
         coefficientET = findViewById(R.id.coefficient);
         coefficientET.setEnabled(false);
+        coefficientET.setBackgroundColor(getResources().getColor(R.color.colorGrey));
         unRecievePackQtyET = findViewById(R.id.unRecievePackQty);
         EANumET = findViewById(R.id.EANum);
         EANumET.setEnabled(false);
+        EANumET.setBackgroundColor(getResources().getColor(R.color.colorGrey));
         palletSeqET = findViewById(R.id.palletSeq);
         palletSeqET.setEnabled(false);
+        palletSeqET.setBackgroundColor(getResources().getColor(R.color.colorGrey));
 
         //属性
         LOTS = findViewById(R.id.LOTS);
@@ -1052,8 +1060,9 @@ public class ReceiveGoodsConfirmActivity extends Activity {
 
             if(result != null){
                 if ("M".equals(result.getSeverityMsgType())) {
-                    if ("作业完成，没待执行信息，请确认。".equals(result.getSeverityMsg())){
+                    if (CustomMsgEnum.COMPLETENORESULT.getName().equals(result.getSeverityMsg())){
                         ToastUtil.show(ReceiveGoodsConfirmActivity.this, result.getSeverityMsg());
+                        finish();
                     }else {
                         ReceivingDetail receivingDetail= result.getResults();
                         if (receivingDetail.getUnRecievePackQty() <= 0){

@@ -21,6 +21,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.google.gson.reflect.TypeToken;
 import com.plusone.pwms.R;
+import com.plusone.pwms.enums.CustomMsgEnum;
 import com.plusone.pwms.model.ClientPackageInfo;
 import com.plusone.pwms.model.ClientTaskInfo;
 import com.plusone.pwms.model.ClientWarehouse;
@@ -185,15 +186,25 @@ public class MoveTaskDetailActivity extends Activity {
         packageSpinner = (Spinner) findViewById(R.id.packageSpinner);
         executePackQtyET = findViewById(R.id.executePackQty);
         binScanConfirmET = findViewById(R.id.bin_scan_confirm);
+
         skuCodeET.setEnabled(false);
+        skuCodeET.setBackgroundColor(getResources().getColor(R.color.colorGrey));
         skuNameET.setEnabled(false);
+        skuNameET.setBackgroundColor(getResources().getColor(R.color.colorGrey));
         planPkgAndCoefficientET.setEnabled(false);
+        planPkgAndCoefficientET.setBackgroundColor(getResources().getColor(R.color.colorGrey));
         unExecutePackQtyET.setEnabled(false);
+        unExecutePackQtyET.setBackgroundColor(getResources().getColor(R.color.colorGrey));
         lotSequenceET.setEnabled(false);
+        lotSequenceET.setBackgroundColor(getResources().getColor(R.color.colorGrey));
         dispLotET.setEnabled(false);
+        dispLotET.setBackgroundColor(getResources().getColor(R.color.colorGrey));
         srcBinET.setEnabled(false);
+        srcBinET.setBackgroundColor(getResources().getColor(R.color.colorGrey));
         destBinET.setEnabled(false);
+        destBinET.setBackgroundColor(getResources().getColor(R.color.colorGrey));
         palletSeqET.setEnabled(false);
+        palletSeqET.setBackgroundColor(getResources().getColor(R.color.colorGrey));
 
         //加载数据
         loadData();
@@ -368,19 +379,24 @@ public class MoveTaskDetailActivity extends Activity {
 
             if(result != null){
                 if ("M".equals(result.getSeverityMsgType())) {
-                    MoveTaskDetail moveTaskDetail= result.getResults();
-                    if (moveTaskDetail.getUnExecutePackQty()>0){
-                        unExecutePackQtyET.setText(moveTaskDetail.getUnExecutePackQty().toString());
+                    if (CustomMsgEnum.COMPLETENORESULT.getName().equals(result.getSeverityMsg())){
+                        ToastUtil.show(MoveTaskDetailActivity.this, result.getSeverityMsg());
+                        finish();
                     }else {
-                        DialogUtil.showNormalDialogNoCancle(MoveTaskDetailActivity.this, "操作完成", "确认后返回任务列表画面",
-                                new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        //关闭扫描
+                        MoveTaskDetail moveTaskDetail= result.getResults();
+                        if (moveTaskDetail.getUnExecutePackQty()>0){
+                            unExecutePackQtyET.setText(moveTaskDetail.getUnExecutePackQty().toString());
+                        }else {
+                            DialogUtil.showNormalDialogNoCancle(MoveTaskDetailActivity.this, "操作完成", "确认后返回任务列表画面",
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            //关闭扫描
 //                                        onClosed();
-                                        MoveTaskDetailActivity.this.finish();
-                                    }
-                                });
+                                            MoveTaskDetailActivity.this.finish();
+                                        }
+                                    });
+                        }
                     }
                 } else {
                     ToastUtil.show(MoveTaskDetailActivity.this, result.getSeverityMsg());
@@ -400,7 +416,7 @@ public class MoveTaskDetailActivity extends Activity {
             parameters.put("taskId", taskId);
             parameters.put("pkgId", selectedpkgId);
             parameters.put("executePackQty", executePackQty);
-            parameters.put("destBinCode", taskId);
+            parameters.put("destBinCode", destBinCode);
 
             paramMap.put("userId", user.getLaborId());
             paramMap.put("whId", clientWarehouse.getWhId());

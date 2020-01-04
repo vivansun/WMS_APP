@@ -107,7 +107,7 @@ public class SplitListActivity extends Activity {
         splitSmartTable = findViewById(R.id.table);
 
         //加载数据
-        loadData();
+//        loadData();
 
         //返回按钮
         toolbar.setNavigationIcon(R.drawable.icon_back_white);
@@ -192,7 +192,7 @@ public class SplitListActivity extends Activity {
                 return R.mipmap.uncheck;
             }
         });
-
+        operations.setFixed(true);
         operations.setOnColumnItemClickListener(new OnColumnItemClickListener<Boolean>() {
             @Override
             public void onClick(Column<Boolean> column, String value, Boolean s, int position) {
@@ -420,5 +420,11 @@ public class SplitListActivity extends Activity {
 
         public void onNothingSelected(AdapterView<?> arg0) {
         }
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        loadData();
     }
 }
