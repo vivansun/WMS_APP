@@ -2,6 +2,7 @@ package com.plusone.pwms.activity;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -30,6 +31,7 @@ import com.bin.david.form.listener.OnColumnItemClickListener;
 import com.bin.david.form.utils.DensityUtils;
 import com.google.gson.reflect.TypeToken;
 import com.plusone.pwms.R;
+import com.plusone.pwms.enums.CustomMsgEnum;
 import com.plusone.pwms.enums.EnuCountMethod;
 import com.plusone.pwms.model.Bin;
 import com.plusone.pwms.model.ClientCountRecord;
@@ -44,6 +46,7 @@ import com.plusone.pwms.model.MyApplication;
 import com.plusone.pwms.model.PickDetail;
 import com.plusone.pwms.model.Response;
 import com.plusone.pwms.model.User;
+import com.plusone.pwms.utils.DialogUtil;
 import com.plusone.pwms.utils.GsonUtil;
 import com.plusone.pwms.utils.SharedPreferencesUtil;
 import com.plusone.pwms.utils.ToastUtil;
@@ -671,18 +674,28 @@ public class CountDetailActivity extends Activity {
 
             if(result != null){
                 if ("M".equals(result.getSeverityMsgType())) {
-                    countDetailInfos = result.getResults().getCountDetailInfos();
-                    if (blindCount){
-                        for(ClientCountRecord ccr : countDetailInfos){
-                            ccr.setInvBaseQty("**");
-                            ccr.setInvPackQty("**");
+                    if (CustomMsgEnum.INPUT.getName().equals(result.getSeverityMsg())){
+                        DialogUtil.showNormalDialogNoCancle(CountDetailActivity.this, "操作完成", result.getSeverityMsg(),
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        finish();
+                                    }
+                                });
+                    }else {
+                        countDetailInfos = result.getResults().getCountDetailInfos();
+                        if (blindCount){
+                            for(ClientCountRecord ccr : countDetailInfos){
+                                ccr.setInvBaseQty("**");
+                                ccr.setInvPackQty("**");
+                            }
                         }
-                    }
 //                    currentRecord = countDetailInfos.get(currentPosition);
-                    binCodeET.setText(result.getResults().getBinCode());
-                    binCode = binCodeET.getText().toString();
-                    countNumET.setText("");
-                    InitTable();
+                        binCodeET.setText(result.getResults().getBinCode());
+                        binCode = binCodeET.getText().toString();
+                        countNumET.setText("");
+                        InitTable();
+                    }
                 } else {
                     ToastUtil.show(CountDetailActivity.this, result.getSeverityMsg());
                 }

@@ -8,7 +8,8 @@ package com.plusone.pwms.enums;
 public enum CustomMsgEnum {
 
     NORESULT("NORESULT","没有找到待执行的信息，请刷新后再尝试。","#000"),
-    COMPLETENORESULT("COMPLETENORESULT","作业完成，没待执行信息，请确认。","#000");
+    COMPLETENORESULT("COMPLETENORESULT","作业完成，没待执行信息，请确认。","#000"),
+    INPUT("INPUT","所有的盘点库位都已经录入完毕，请确认。","#000");
 
 
     private String code;
@@ -53,6 +54,8 @@ public enum CustomMsgEnum {
                 return NORESULT;
             case "COMPLETENORESULT":
                 return COMPLETENORESULT;
+            case "INPUT":
+                return INPUT;
             default:
                 return null;
         }
@@ -64,6 +67,8 @@ public enum CustomMsgEnum {
                 return NORESULT.getCode();
             case "作业完成，没待执行信息，请确认。":
                 return COMPLETENORESULT.getCode();
+            case "所有的盘点库位都已经录入完毕，请确认。":
+                return INPUT.getCode();
             default:
                 return null;
         }
