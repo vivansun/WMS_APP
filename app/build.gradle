@@ -142,7 +142,7 @@ android {
 //        }
         pwms_local{
             //对应服务器地址
-            buildConfigField "String", "SERVER_URL",'"http://192.168.10.169:9099/services/"'
+            buildConfigField "String", "SERVER_URL",'"http://172.16.90.69:8080/pwms-stand/services/"'
             applicationId 'com.plusone.pwms.local'
             manifestPlaceholders = [
                     "app_name":"pwms_local",
