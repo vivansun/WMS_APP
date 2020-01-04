@@ -262,6 +262,7 @@ public class CountDetailActivity extends Activity {
                     ClientCountRecord currentCountRecord = countDetailInfos.get(i);
                     if (currentCountRecord.getCountNum() != null){
                         ClientCountResult clientCountResult = new ClientCountResult();
+                        clientCountResult.setClass99("com.plusone.pwms.server.mobile.support.ClientCountResult");
                         if (currentCountRecord.getCountRecordId() != null){
                             clientCountResult.setCountRecordId(currentCountRecord.getCountRecordId());
                             clientCountResult.setInvPackQty(currentCountRecord.getCountNum());//传实盘数量   还是包装数量
@@ -726,6 +727,7 @@ public class CountDetailActivity extends Activity {
 
             if(result != null){
                 if ("M".equals(result.getSeverityMsgType())) {
+                    currentPosition = 0;
                     countDetailInfos = result.getResults().getCountDetailInfos();
                     if (blindCount){
                         for(ClientCountRecord ccr : countDetailInfos){

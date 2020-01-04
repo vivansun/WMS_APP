@@ -23,6 +23,8 @@ public class ClientCountResult implements Serializable {
     //库存包装数量
     private Double invPackQty = 0D;
 
+    private String class99;
+
     public Long getCountRecordId() {
         return countRecordId;
     }
@@ -93,5 +95,13 @@ public class ClientCountResult implements Serializable {
 
     public void setInvPackQty(Double invPackQty) {
         this.invPackQty = invPackQty;
+    }
+
+    public String getClass99() {
+        return class99;
+    }
+
+    public void setClass99(String class99) {
+        this.class99 = class99;
     }
 }
